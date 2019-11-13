@@ -6,6 +6,7 @@ $(document).ready(function() {
 // -- Game Steps --
 // Create 6 decks of cards and shuffle them
 	createSixDecks();
+	newHand();
 // Player places a bet
 	$('div.bet').on('click', function() {
 		$(this).removeClass('glow');
@@ -19,13 +20,14 @@ $(document).ready(function() {
 	});
 // Player hits
 	$('#hit').on('click', function() {
+		var $playerTotal = $('span.player-total');
+		var $total = parseInt($playerTotal.text());
+		var $cards = $('.card.new, .player-hand .card');
 		if (!placeBet.called) {
 			alert('You must place a bet first!')
-		} else {
-				var $playerTotal = $('span.player-total');
-				var $cards = $('.card.new, .player-hand .card');
+		} else if ($total < 21){
 				hit($playerTotal, $cards);
-		}
+		} else {}
 	});
 
 // Player stays
@@ -101,16 +103,26 @@ $(document).ready(function() {
 		var $total = $('div.player-total');
 		var $totalSpan = $('span.player-total');
 		var $player = $('.player-hand .card');
+		var $buttons = $('#hit, #stay');
 		drawCard($firstCards);
 		drawCard($secondCards);
 		$('.card-facedown').show();
 		$firstCards.removeClass('hide');
 		$secondCards.removeClass('hide');
 		$total.removeClass('hide');
+		$buttons.slideDown(600);
 		var $playerCards = getCardValues($player);
 		var playerCombos = getAllCombos($playerCards[0], $playerCards[1]);
 		var $playerTotal = highestUnder21(playerCombos)
 		displayTotal($playerTotal, $totalSpan);
+		if ($playerTotal === 21) {
+			setTimeout(function() {
+				alert('Blackjack!');
+				setTimeout(function() {
+					endPlayerTurn();
+				}, 1000);
+			}, 1000);
+		}
 	}
 
 // STORE CARD PIP VALUES IN AN ARRAY
@@ -199,9 +211,7 @@ $(document).ready(function() {
 		} else {
 			$total.text('BUST!');
 			if (!dealersTurn.called) {
-				setTimeout(function() {
-					endPlayerTurn();
-				}, 1500);
+					winOrLose();
 			}
 		}
 	}
@@ -242,6 +252,8 @@ $(document).ready(function() {
 	function endPlayerTurn() {
 		var $playerHand = $('.player-hand .cards');
 		var $addedCards = $('.card-container .card');
+		// Hide the buttons in the Player module
+		$('#stay, #hit').fadeOut(600);
 		// Move all cards into player module and overlap them
 		$playerHand.append($addedCards);
 		$('.cards .card').animate({marginLeft: '-100px'});
@@ -291,12 +303,12 @@ $(document).ready(function() {
 		if ($dealerTotal < $playerTotal) {
 			$newBank = $currentBank + $bet * 2;
 			setTimeout(function () {
-					alert('You won! YOU: ' + $playerTotal + ' DEALER: ' + $dealerTotal);
+					alert('You won $' + $bet + '! YOU: ' + $playerTotal + ' DEALER: ' + $dealerTotal);
 			}, 2000);
-		} else if (isNaN($dealerTotal) && isNaN($playerTotal)) {
+		} else if (isNaN($playerTotal)) {
 			$newBank = $currentBank + $bet;
 			setTimeout(function () {
-					alert('Push. YOU: Bust DEALER: Bust');
+					alert('You lost $' + $bet + '. YOU: Bust!');
 			}, 2000);
 		} else if ($dealerTotal === $playerTotal) {
 			$newBank = $currentBank + $bet;
@@ -306,17 +318,12 @@ $(document).ready(function() {
 		} else if ($dealerTotal > $playerTotal) {
 			$newBank = $currentBank;
 			setTimeout(function () {
-					alert('You lost. YOU: ' + $playerTotal + ' DEALER: ' + $dealerTotal);
-			}, 2000);
-		} else if ($dealerTotal <= 21 && isNaN($playerTotal)) {
-			$newBank = $currentBank;
-			setTimeout(function () {
-					alert('You lost. YOU: Bust' + ' DEALER: ' + $dealerTotal);
+					alert('You lost $' + $bet + '. YOU: ' + $playerTotal + ' DEALER: ' + $dealerTotal);
 			}, 2000);
 		} else if ($playerTotal <= 21 && isNaN($dealerTotal)) {
 			$newBank = $currentBank + $bet * 2;
 			setTimeout(function () {
-					alert('You won. YOU: ' + $playerTotal + ' DEALER: Bust' );
+					alert('You won $' + $bet + '! YOU: ' + $playerTotal + ' DEALER: Bust' );
 			}, 2000);
 		}
 	// Start new hand after 5 seconds
@@ -343,6 +350,7 @@ $(document).ready(function() {
 		$('.player-hand .card').css('margin', '0 10px');
 		$('.dealer-total').text('');
 		$('div.bet').addClass('glow');
+		$('.bet-input').focus();
 		placeBet.called = false;
 		dealersTurn.called = false;
 	}
