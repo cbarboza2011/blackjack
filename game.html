@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Blackjack</title>
+	<!-- RESET -->
+	<link rel="stylesheet" href="vendor/css/reset.css">
+	<!-- BOX-SIZING RESET -->
+	<link rel="stylesheet" href="vendor/css/box-sizing.css">
+	<!-- LINK STYLESHEET -->
+	<link rel="stylesheet" href="css/style.css">
+	<!-- LINK JQUERY -->
+	<script src="vendor/jquery/jquery.js"></script>
+	<!-- LINK SCRIPT -->
+	<script src="scripts/index2.js"></script>
+	<!-- LINK FONTS -->
+	<link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Literata&display=swap" rel="stylesheet">
+</head>
+<body>
+
+	<div class="main flex-center">
+		<div class="banner game-page">
+			<img src="images/blackjack.png" width="200px" alt="Blackjack banner text">
+		</div>
+		<div class="buttons game-page flex">
+			<a href="how-to.html"><div class="button flex">How To Play</div></a>
+			<a href="index.html"><div class="button flex">Main</div></a>
+		</div>
+
+		<div class="dealer-module flex-center">
+			<h1>Dealer</h1>
+			<span class="dealer-total flex"></span>
+			<div class="dealer-cards flex-center">
+				<div class="card first-card hide"></div>
+				<div class="card second-card hide">
+					<div class="card card-facedown" style="background-image: url('images/card-back.png')"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card-container flex-center"></div>
+
+		<div class="player-module flex">
+			<div class="money flex-column">
+				<div class="bet flex-column glow">
+					<h1>Bet: <span class="current-bet"></span></h1>
+					<form class="place-bet flex-column">
+						<p class="hideaway">Place a bet to begin.</p>
+						<input type="text" placeholder="$25" class="bet-input hideaway">
+						<input type="submit" value="Place Bet" class="bet-button hideaway">
+					</form>
+				</div>
+				<div class="bank flex-column">
+					<h1>Bank:</h1>
+					<div>$<span class="player-bank">100</span></div>
+				</div>
+			</div>
+			<div class="player-hand flex-column">
+				<div class="cards flex-center">
+					<div class="card first-card hide"></div>
+					<div class="card second-card hide"></div>
+				</div>
+				<div class="player-total hide flex">
+					<h1>Total:</h1>
+					<h1><span class="player-total"></span></h1>
+				</div>
+			</div>
+			<div class="action flex-column">
+				<div class="button" id="hit">Hit</div>
+				<div class="button" id="stay">Stay</div>
+				<div class="button hide" id="split">Split</div>
+				<div class="button hide" id="dbl-down">Double Down</div>
+				<div class="button hide" id="ins">Insurance</div>
+			</div>
+		</div>
+
+		</div>
+		<div class="blackjack-hand">
+			<img src="images/blackjack-hand.png" width="125px" alt="blackjack hand image">
+		</div>
+	</div>
+
+
+</body>
+</html>
