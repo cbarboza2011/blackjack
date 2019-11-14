@@ -25,7 +25,7 @@ a {
 /*START PAGE*/
 body {
 	background: linear-gradient(#2a432b, #477148);
-	min-height: 650px;
+	min-height: 100vh;
 	background-size: fill;
 	font-family: 'Quicksand', sans-serif;
 	overflow: hidden;
@@ -217,6 +217,7 @@ span.italic {
 	width: 90px;
 	height: 138px;
 	margin: 0 3px;
+	align-self: baseline;
 }
 
 .new {
@@ -423,17 +424,15 @@ input.bet-button:hover {
 }
 
 .modal {
-	display: none;
 	position: fixed;
-	z-index: -1;
-	padding-top: 100px; /* Location of the box */
+	z-index: +1;
+	padding-top: 40vh; /* Location of the box */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  background: rgba(0,0,0,0.4);
 }
 
 .modal-content {
@@ -441,14 +440,43 @@ input.bet-button:hover {
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+	border-radius: 10px;
+  width: 40%;
+	height: 30vh;
+	align-items: center;
+}
+
+.alert-container {
+	flex-grow: 1;
+	text-align: center;
+}
+
+.alert-message {
+	font-size: 28px;
+	font-weight: bold;
+	line-height: 42px;
+	font-family: 'Literata', serif;
+	color: #477148;
+}
+
+.results {
+	line-height: 30px;
+	font-size: 20px;
+}
+
+.who {
+	font-weight: bold;
+	color: #477148;
+	font-family: 'Literata', serif;
 }
 
 .close {
   color: #aaaaaa;
-  float: right;
-  font-size: 28px;
+  font-size: 38px;
+	line-height: 1px;
   font-weight: bold;
+	margin-left: 10px;
+	align-self: flex-start;
 }
 
 .close:hover,
