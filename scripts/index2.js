@@ -116,12 +116,7 @@ $(document).ready(function() {
 		var $playerTotal = highestUnder21(playerCombos)
 		displayTotal($playerTotal, $totalSpan);
 		if ($playerTotal === 21) {
-			setTimeout(function() {
-				alert('Blackjack!');
-				setTimeout(function() {
-					endPlayerTurn();
-				}, 1000);
-			}, 1000);
+				winOrLose();
 		}
 	}
 
@@ -303,12 +298,17 @@ $(document).ready(function() {
 		if ($dealerTotal < $playerTotal) {
 			$newBank = $currentBank + $bet * 2;
 			setTimeout(function () {
-					alert('You won $' + $bet + '! YOU: ' + $playerTotal + ' DEALER: ' + $dealerTotal);
+					alert('You won $' + $bet * 2 + '! YOU: ' + $playerTotal + ' DEALER: ' + $dealerTotal);
+			}, 2000);
+		} else if ($playerTotal === 21 && !dealersTurn.called) {
+			$newBank = $currentBank + $bet * 2.5;
+			setTimeout(function () {
+					alert('BLACKJACK! You won $' + $bet * 2.5 + '!');
 			}, 2000);
 		} else if (isNaN($playerTotal)) {
-			$newBank = $currentBank + $bet;
+			$newBank = $currentBank;
 			setTimeout(function () {
-					alert('You lost $' + $bet + '. YOU: Bust!');
+					alert('You lost $' + $bet + '. Bust!');
 			}, 2000);
 		} else if ($dealerTotal === $playerTotal) {
 			$newBank = $currentBank + $bet;
@@ -323,7 +323,7 @@ $(document).ready(function() {
 		} else if ($playerTotal <= 21 && isNaN($dealerTotal)) {
 			$newBank = $currentBank + $bet * 2;
 			setTimeout(function () {
-					alert('You won $' + $bet + '! YOU: ' + $playerTotal + ' DEALER: Bust' );
+					alert('You won $' + $bet * 2 + '! YOU: ' + $playerTotal + ' DEALER: Bust!' );
 			}, 2000);
 		}
 	// Start new hand after 5 seconds
