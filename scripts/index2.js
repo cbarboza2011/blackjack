@@ -104,7 +104,7 @@ $(document).ready(function() {
 			placeBet.called = true;
 			dealFirstCards();
 		} else if ($bet > $bank) {
-			var $message = 'Bet cannot exceed the amount in your Bank!';
+			var $message = 'Bet cannot exceed the amount in your bank!';
 			alertModal($message);
 		} else if (isNaN($bet)) {
 			var $message = 'Enter a number, without "$".';
@@ -134,6 +134,7 @@ $(document).ready(function() {
 		var playerCombos = getAllCombos($playerCards[0], $playerCards[1]);
 		var $playerTotal = highestUnder21(playerCombos)
 		displayTotal($playerTotal, $totalSpan);
+		dealFirstCards.called = true;
 		if ($playerTotal === 21) {
 				winOrLose();
 		}
@@ -222,6 +223,9 @@ $(document).ready(function() {
 		var $total = element;
 		if (value <= 21) {
 			$total.text(value);
+			if (!dealersTurn.called && $total === 21) {
+				endPlayerTurn();
+			}
 		} else {
 			$total.text('BUST!');
 			if (!dealersTurn.called) {
@@ -312,8 +316,8 @@ $(document).ready(function() {
 		var $bet = parseInt($('.current-bet').text().replace('$', ''));
 		var $bank = $('.player-bank');
 		var $currentBank = parseInt($bank.text());
-		var $newBank, $message, $result;
-		var $alert = $('.alert-message');
+		var $newBank, $message;
+		// var $alert = $('.alert-message');
 		// switch($playerTotal) {
 		// 	case $playerTotal > $dealerTotal:
 		// 	$newBank = $currentBank + $bet * 2;
@@ -353,53 +357,76 @@ $(document).ready(function() {
 
 		if ($dealerTotal < $playerTotal) {
 			$newBank = $currentBank + $bet * 2;
-			$result = 'You won $' + $bet * 2 + '!';
-			// $message = 'YOU: ' + $playerTotal + ' DEALER: ' + $dealerTotal;
+			$message = 'You won $' + $bet + '!';
 		} else if ($playerTotal === 21 && !dealersTurn.called) {
-			$newBank = $currentBank + $bet * 2.5;
-			$result = 'You won $' + $bet * 2.5 + '!';
-			// $message = 'BLACKJACK!';
+			$newBank = $currentBank + $bet * 1.5;
+			$message = 'BLACKJACK! You won $' + $bet * 1.5 + '!';
 		} else if (isNaN($playerTotal) && !dealersTurn.called) {
 			$newBank = $currentBank;
-			$result = 'You lost $' + $bet;
-			// $message = 'Bust!';
+			$message = 'You lost $' + $bet + '.';
 		} else if ($dealerTotal === $playerTotal) {
 			$newBank = $currentBank + $bet;
-			$result = 'Push';
-			// $message = 'YOU: ' + $playerTotal + ' DEALER: ' + $dealerTotal;
+			$message = 'Push!';
 		} else if ($dealerTotal > $playerTotal) {
 			$newBank = $currentBank;
-			$result = 'You lost $' + $bet;
-			// $message = 'YOU: ' + $playerTotal + ' DEALER: ' + $dealerTotal;
+			$message = 'You lost $' + $bet + '.';
 		} else if ($playerTotal <= 21 && isNaN($dealerTotal)) {
 			$newBank = $currentBank + $bet * 2;
-			$result = 'You won $' + $bet * 2 + '!';
-			// $message = 'YOU: ' + $playerTotal + ' DEALER: Bust!';
+			$dealerTotal = 'Bust!';
+			$message = 'You won $' + $bet + '!';
 		}
-	// Start new hand after 5 seconds
-	setTimeout(function() {
-		alertModal($result);
-		setTimeout(function () {
-			$bank.text($newBank);
-			newHand();
-		}, 3000);
-	}, 1000);
+		// Start new hand after 5 seconds
+		setTimeout(function() {
+			alertModal($message, $playerTotal, $dealerTotal);
+			setTimeout(function () {
+				$bank.text($newBank);
+				newHand();
+			}, 3000);
+		}, 2000);
 	}
 
+// MAKE TEXT GREEN
+	function green(text) {
+		$(text).css('color', '#477148');
+	}
+
+// MAKE TEXT RED
+	function red(text) {
+		$(text).css('color', '#591D1D');
+	}
 // SHOW MODAL
-	function alertModal(message) {
-		$popUp = $('.alert-message');
-		$('.modal').removeClass('hide');
-		$popUp.text(message);
+	function alertModal(message, result1, result2) {
+		$alertMessage = $('.alert-message');
+		$results = $('.results');
+		$player = $('.you');
+		$dealer = $('.dealer');
+		$alertMessage.text(message);
+		if (result2) {
+			$results.show();
+			$player.text(result1);
+			$dealer.text(result2);
+			if (result1 > result2) {
+				green($player);
+				red($dealer);
+			} else if (result1 < result2) {
+				red($player);
+				green($dealer);
+			}
+		} 
+		$('.modal').fadeIn(400);
 		setTimeout(function() {
 			$('.modal').fadeOut(1000);
-		}, 1000);
+		}, 2000);
 	}
 
 // CLOSE MODAL
 	$('.close').on('click', function() {
-		$('.modal').addClass('hide');
-	})
+		if (dealFirstCards.called) {
+			newHand();
+		} else {
+			$('.modal').hide();
+		}
+	});
 
 // END HAND
 	function newHand() {
@@ -407,6 +434,7 @@ $(document).ready(function() {
 		var $secondCards = $('.second-card');
 		$firstCards.addClass('hide');
 		$secondCards.addClass('hide');
+		$('.action .button, .results').hide();
 		$('div.player-total').addClass('hide');
 		$('span.player-total').text('');
 		$('.current-bet').text('');
@@ -418,7 +446,6 @@ $(document).ready(function() {
 		$('.dealer-total').text('');
 		$('div.bet').addClass('glow');
 		$('.bet-input').focus();
-		// $('.modal').addClass('hide');
 		placeBet.called = false;
 		dealersTurn.called = false;
 	}

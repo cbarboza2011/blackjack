@@ -444,6 +444,8 @@ input.bet-button:hover {
   width: 40%;
 	height: 30vh;
 	align-items: center;
+	font-family: 'Literata', serif;
+
 }
 
 .alert-container {
@@ -452,22 +454,20 @@ input.bet-button:hover {
 }
 
 .alert-message {
-	font-size: 28px;
+	font-size: 34px;
+	line-height: 40px;
 	font-weight: bold;
-	line-height: 42px;
-	font-family: 'Literata', serif;
 	color: #477148;
 }
 
 .results {
-	line-height: 30px;
 	font-size: 20px;
+	line-height: 150%;
 }
 
-.who {
+.you, .dealer {
 	font-weight: bold;
-	color: #477148;
-	font-family: 'Literata', serif;
+	font-size: 20px;
 }
 
 .close {
